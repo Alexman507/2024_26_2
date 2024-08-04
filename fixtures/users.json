@@ -1,0 +1,42 @@
+[
+  {
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+      "password": "123",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-07-16T14:24:21.819Z",
+      "email": "Alexman-94@inbox.ru",
+      "phone": null,
+      "avatar": "",
+      "city": "Северная столица",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+      "password": "123",
+      "last_login": null,
+      "is_superuser": false,
+      "first_name": "Леха",
+      "last_name": "Алексуткин",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-07-16T14:34:50.234Z",
+      "email": "nerocross507@gmail.com",
+      "phone": null,
+      "avatar": "",
+      "city": "Северная столица",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

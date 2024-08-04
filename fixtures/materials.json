@@ -1,0 +1,53 @@
+[
+  {
+    "model": "materials.course",
+    "pk": 1,
+    "fields": {
+      "title": "Programming",
+      "description": "Топ курс кста",
+      "preview": ""
+    }
+  },
+  {
+    "model": "materials.course",
+    "pk": 2,
+    "fields": {
+      "title": "Финансовая грамотность",
+      "description": "Об успешном успехе",
+      "preview": ""
+    }
+  },
+  {
+    "model": "materials.lesson",
+    "pk": 1,
+    "fields": {
+      "title": "Python",
+      "description": "Язык программирования",
+      "preview": "",
+      "url": "",
+      "course": 1
+    }
+  },
+  {
+    "model": "materials.lesson",
+    "pk": 2,
+    "fields": {
+      "title": "Успешный успех",
+      "description": "Автор Успех Успехов",
+      "preview": "",
+      "url": "",
+      "course": 2
+    }
+  },
+  {
+    "model": "materials.lesson",
+    "pk": 3,
+    "fields": {
+      "title": "9 марафонов",
+      "description": "От Ленки",
+      "preview": "",
+      "url": "",
+      "course": 2
+    }
+  }
+]
