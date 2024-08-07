@@ -195,8 +195,8 @@ CELERY_TASK_TRACK_STARTED = os.getenv('FLAG_TRACKER') == 'True'
 CELERY_TASK_TIME_LIMIT = os.getenv('TASK_TIME')
 
 CELERY_BEAT_SCHEDULE = {
-    'task-name': {
-        'task': 'myapp.tasks.my_task',  # Путь к задаче
-        'schedule': timedelta(minutes=10),  # Расписание выполнения задачи (например, каждые 10 минут)
+    'block_users_who_was_absent_last_mount': {
+        'task': 'users.tasks.block_users_who_was_absent_last_mount',  # Путь к задаче
+        'schedule': timedelta(days=1),  # Расписание выполнения задачи (например, каждые 10 минут)
     },
 }

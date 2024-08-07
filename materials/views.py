@@ -1,3 +1,7 @@
+import pytz
+from datetime import datetime, timedelta
+
+from django.conf import settings
 from rest_framework.generics import (CreateAPIView, DestroyAPIView,
                                      ListAPIView, RetrieveAPIView,
                                      UpdateAPIView, get_object_or_404)
@@ -5,10 +9,12 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from timezone_field.backends import pytz
 
 from materials.models import Course, Lesson, Subscription
 from materials.paginators import MaterialsPaginator
 from materials.serializer import CourseSerializer, LessonSerializer, SubscriptionSerializer
+from materials.tasks import send_information_about_course_update
 from users.permissions import IsModer, IsOwner
 
 
@@ -31,6 +37,15 @@ class CourseViewSet(ModelViewSet):
             self.permission_classes = (IsOwner,)
         return super().get_permissions()
 
+    def perform_update(self, serializer):
+        course = serializer.save()
+        course.save()
+
+        zone = pytz.timezone(settings.TIME_ZONE)
+        current_datetime_4_hours_ago = datetime.now(zone) - timedelta(hours=4)
+
+        if course.updated_at < current_datetime_4_hours_ago:
+            send_information_about_course_update.delay(course.pk)
 
 class LessonCreateAPIView(CreateAPIView):
     queryset = Lesson.objects.all()
@@ -38,9 +53,16 @@ class LessonCreateAPIView(CreateAPIView):
     permission_classes = (~IsModer, IsAuthenticated)
 
     def perform_create(self, serializer):
-        lesson = serializer.save()
-        lesson.owner = self.request.user
-        lesson.save()
+        new_lesson = serializer.save()
+
+        zone = pytz.timezone(settings.TIME_ZONE)
+        current_datetime_4_hours_ago = datetime.now(zone) - timedelta(hours=4)
+
+        course = get_object_or_404(Course, pk=new_lesson.course.pk)
+        if new_lesson.course.updated_at < current_datetime_4_hours_ago:
+            send_information_about_course_update.delay(course.pk)
+
+        course.save()
 
 
 class LessonListAPIView(ListAPIView):
@@ -59,6 +81,15 @@ class LessonUpdateAPIView(UpdateAPIView):
     queryset = Lesson.objects.all()
     serializer_class = LessonSerializer
     permission_classes = (IsAuthenticated, IsModer | IsOwner)
+
+    def perform_update(self, serializer):
+        new_lesson = serializer.save()
+        zone = pytz.timezone(settings.TIME_ZONE)
+        current_datetime_4_hours_ago = datetime.now(zone) - timedelta(hours=4)
+        course = get_object_or_404(Course, pk=new_lesson.course.pk)
+        if new_lesson.course.updated_at < current_datetime_4_hours_ago:
+            send_information_about_course_update.delay(course.pk)
+        course.save()
 
 
 class LessonDestroyAPIView(DestroyAPIView):
