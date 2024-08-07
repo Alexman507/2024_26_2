@@ -192,7 +192,7 @@ CELERY_TIMEZONE = "Europe/Moscow"
 CELERY_TASK_TRACK_STARTED = os.getenv('FLAG_TRACKER') == 'True'
 
 # Максимальное время на выполнение задачи
-CELERY_TASK_TIME_LIMIT = os.getenv('TASK_TIME')
+CELERY_TASK_TIME_LIMIT = int(os.getenv('TASK_TIME')) * 60
 
 CELERY_BEAT_SCHEDULE = {
     'block_users_who_was_absent_last_mount': {
